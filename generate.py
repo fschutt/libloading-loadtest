@@ -32,10 +32,12 @@ code += "\r\n"
 code += "pub fn load_big_dll(path: &str) -> Option<BigDll> {\r\n"
 code += "    unsafe {\r\n"
 code += "        let lib = Library::new(path)?;\r\n"
+for i in range(0, amount_of_structs - 1):
+    code += "        let function_" + str(i) + ": fn(_:  _" + str(i) + ") -> _" + str(i + 1) + " = mem::transmute(lib.get(b\"function_" + str(i) + "\")?);\r\n"
 code += "        let dll = BigDll {\r\n"
 code += "            lib,\r\n"
 for i in range(0, amount_of_structs - 1):
-    code += "            function_" + str(i) + ": mem::transmute(lib.get(b\"function_" + str(i) + "\")?),\r\n"
+    code += "            function_" + str(i) + ",\r\n"
 code += "        };\r\n"
 code += "        Some(dll)\r\n"
 code += "    }\r\n"
